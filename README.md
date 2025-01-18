@@ -1,6 +1,6 @@
 # MotionCraft
 
-This repository contains the implementation of the paper "MotionCraft: Crafting Whole-Body Motion with Plug-and-Play Multimodal Controls"
+This repository contains the implementation of the AAAI2025 paper "MotionCraft: Crafting Whole-Body Motion with Plug-and-Play Multimodal Controls"
 
 Keywords: Whole-body Motion Generation, Multimodal Controls, Text-to-Motion, Music-to-Dance, Speech-to-Gesture 
 
@@ -41,7 +41,7 @@ Keywords: Whole-body Motion Generation, Multimodal Controls, Text-to-Motion, Mus
 - [x] Release evluation and visualization code
 - [x] Release MC-Bench pre-processing code
 - [x] Release checkpoints
-- [ ] Release trainig code
+- [x] Release trainig code
 - [ ] Release gradio demo
 
 ## 🧭 Overview
@@ -77,10 +77,16 @@ conda activate motioncraft
 conda install pytorch==1.12.1 torchvision==0.13.1 cudatoolkit=11.3 -c pytorch -y
 ```
 
-Then, you can install mmcv with:
+Then, you can install mmcv, MOE (tutel) and PyTorch3D with:
 
 ```
 pip install "mmcv-full>=1.4.2,<=1.9.0"
+
+python3 -m pip install --verbose --upgrade git+https://github.com/microsoft/tutel@main
+
+conda install -c bottler nvidiacub -y
+conda install -c fvcore -c iopath -c conda-forge fvcore iopath -y
+conda install pytorch3d -c pytorch3d -y
 ```
 
 After that, you can install required packages thourgh:
@@ -279,7 +285,18 @@ Noted: *For detailed usage of the parameters, please refer to [visualize.py](too
 
 ### Training 🤯
 
-The code is coming soon!
+You can train using the script:
+
+```
+# text-to-motion
+bash ./tools/dist_train.sh ./configs/stmogen/T2M_motionx_align_Finedance_Beats2_face_no_loss.py ./outputs/t2m_no_face_loss 8 --no-validate --seed 42 --deterministic
+# speech-to-gesture
+bash ./tools/ctrlnet_train.sh ./configs/stmogen/S2G_Beats2_no_face_loss.py ./outputs/S2G_t2m_no_face_loss 8 --no-validate --seed 42 --deterministic  
+# music-to-dance
+bash ./tools/ctrlnet_train.sh ./configs/stmogen/M2D_finedance_no_face_loss.py ./outputs/M2D_t2m_no_face_loss_train 8 --no-validate --seed 42 --deterministic  
+```
+
+Noted: *For detailed usage of the parameters, please refer to [train.py](tools/train.py), and [ctrlnet_train.py](tools/ctrlnet_train.py).*
 
 ## 🤝🏼 Cite Us
 
